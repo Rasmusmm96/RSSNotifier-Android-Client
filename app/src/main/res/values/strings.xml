@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">RSS Notifier</string>
+    <string name="channel_name">News</string>
+    <string name="channel_description">This channel handles all new items from the server</string>
+    <string name="new_feed_item">News</string>
+    <string name="share">Share</string>
+    <string name="share_link">Share link</string>
+    <string name="open_in_chrome">Open in Chrome</string>
+</resources>
