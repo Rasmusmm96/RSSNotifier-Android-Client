@@ -1,5 +1,6 @@
 package moehring.rssnotifier.activities;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +30,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Bundle b = getIntent().getExtras();
+
+        if (b != null && b.getString("link") != null) {
+            Intent intent = new Intent(this, WebActivity.class);
+            intent.putExtra("link", b.getString("link"));
+            startActivity(intent);
+        }
 
         newsManager = NewsManager.getInstance(this);
         NotificationHandler.createNotificationChannel(this);
@@ -50,24 +58,16 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
 
         // Subscribe to topic
-        FirebaseMessaging.getInstance().subscribeToTopic("efb").addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(MainActivity.this, "Subscribed to topic", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Failed subscription", Toast.LENGTH_SHORT).show();
-                }
+        FirebaseMessaging.getInstance().subscribeToTopic("efb").addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Toast.makeText(MainActivity.this, "Failed subscription", Toast.LENGTH_SHORT).show();
             }
         });
 
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mAdapter = new NewsListAdapter(newsManager.getNewsList());
-                mRecyclerView.swapAdapter(mAdapter, false);
-                refreshLayout.setRefreshing(false);
-            }
+        refreshLayout.setOnRefreshListener(() -> {
+            mAdapter = new NewsListAdapter(newsManager.getNewsList());
+            mRecyclerView.swapAdapter(mAdapter, false);
+            refreshLayout.setRefreshing(false);
         });
     }
 

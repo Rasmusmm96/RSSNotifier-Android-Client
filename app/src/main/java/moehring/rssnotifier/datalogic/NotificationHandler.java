@@ -10,14 +10,12 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
-import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import moehring.rssnotifier.R;
-import moehring.rssnotifier.activities.WebActivity;
+import moehring.rssnotifier.activities.MainActivity;
 
 public class NotificationHandler {
-
-    private static Random random = new Random();
 
     public static void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -34,12 +32,8 @@ public class NotificationHandler {
     }
 
     public static void showNotification(Context context, String text, String link) {
-        Intent intent = new Intent(context, WebActivity.class);
-        Bundle b = new Bundle();
-        b.putString("link", link);
-        intent.putExtras(b);
-
-        System.out.println(intent.getExtras().getString("link"));
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra("link", link);
 
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -56,6 +50,14 @@ public class NotificationHandler {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
-        notificationManager.notify(random.nextInt(), mBuilder.build());
+        notificationManager.notify(NotificationID.getID(), mBuilder.build());
+    }
+}
+
+class NotificationID {
+    private final static AtomicInteger c = new AtomicInteger(0);
+
+    static int getID() {
+        return c.incrementAndGet();
     }
 }

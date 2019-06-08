@@ -40,9 +40,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHo
 
             itemView.setOnClickListener(view -> {
                 Intent intent = new Intent(view.getContext(), WebActivity.class);
-                Bundle b = new Bundle();
-                b.putString("link", mTxtLink.getText().toString());
-                intent.putExtras(b);
+                intent.putExtra("link", mTxtLink.getText().toString());
 
                 PendingIntent pendingIntent = PendingIntent.getActivity(
                         view.getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
