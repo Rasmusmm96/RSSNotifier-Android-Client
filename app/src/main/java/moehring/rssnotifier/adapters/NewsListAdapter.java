@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.LinkedList;
 
 import moehring.rssnotifier.R;
-import moehring.rssnotifier.activities.WebActivity;
 import moehring.rssnotifier.entities.NewsItem;
 
 public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHolder>{
@@ -40,26 +39,14 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHo
             mTxtTimestamp = itemView.findViewById(R.id.txtDate);
 
             itemView.setOnClickListener(view -> {
-                //Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mTxtLink.getText().toString()));
-                //context.startActivity(browserIntent);
-
                 Uri uri = Uri.parse(mTxtLink.getText().toString());
-                CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder().build();
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                builder
+                        .addDefaultShareMenuItem()
+                        .setStartAnimations(context, R.anim.slide_in_right, R.anim.slide_out_left)
+                        .setExitAnimations(context, R.anim.slide_in_left, R.anim.slide_out_right);
+                CustomTabsIntent customTabsIntent = builder.build();
                 customTabsIntent.launchUrl(context, uri);
-                /*
-                Intent intent = new Intent(view.getContext(), WebActivity.class);
-                intent.putExtra("link", mTxtLink.getText().toString());
-
-                PendingIntent pendingIntent = PendingIntent.getActivity(
-                        view.getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
-                );
-
-                try {
-                    pendingIntent.send();
-                } catch (PendingIntent.CanceledException e) {
-                    System.out.println("err");
-                }
-                 */
             });
         }
     }

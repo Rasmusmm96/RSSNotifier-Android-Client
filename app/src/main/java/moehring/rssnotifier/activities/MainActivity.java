@@ -34,7 +34,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (b != null && b.getString("link") != null) {
             Uri uri = Uri.parse(b.getString("link"));
-            CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder().build();
+            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+            builder.setStartAnimations(this, R.anim.slide_in_right, R.anim.slide_out_left);
+            builder.setExitAnimations(this, R.anim.slide_in_left, R.anim.slide_out_right);
+            CustomTabsIntent customTabsIntent = builder.build();
             customTabsIntent.launchUrl(this, uri);
         }
 
