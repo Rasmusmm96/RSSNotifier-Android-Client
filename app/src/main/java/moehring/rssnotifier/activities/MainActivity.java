@@ -1,16 +1,16 @@
 package moehring.rssnotifier.activities;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import moehring.rssnotifier.R;
@@ -33,9 +33,9 @@ public class MainActivity extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
 
         if (b != null && b.getString("link") != null) {
-            Intent intent = new Intent(this, WebActivity.class);
-            intent.putExtra("link", b.getString("link"));
-            startActivity(intent);
+            Uri uri = Uri.parse(b.getString("link"));
+            CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder().build();
+            customTabsIntent.launchUrl(this, uri);
         }
 
         newsManager = NewsManager.getInstance(this);

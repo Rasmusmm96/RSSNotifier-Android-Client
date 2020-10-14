@@ -1,17 +1,18 @@
 package moehring.rssnotifier.adapters;
 
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import android.text.format.DateFormat;
+
+import androidx.annotation.NonNull;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.LinkedList;
 
 import moehring.rssnotifier.R;
@@ -31,7 +32,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHo
         TextView mTxtLink;
         TextView mTxtTimestamp;
 
-        ViewHolder(View itemView) {
+        ViewHolder(View itemView, Context context) {
             super(itemView);
 
             mTxtTitle = itemView.findViewById(R.id.txtTitle);
@@ -39,6 +40,13 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHo
             mTxtTimestamp = itemView.findViewById(R.id.txtDate);
 
             itemView.setOnClickListener(view -> {
+                //Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mTxtLink.getText().toString()));
+                //context.startActivity(browserIntent);
+
+                Uri uri = Uri.parse(mTxtLink.getText().toString());
+                CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder().build();
+                customTabsIntent.launchUrl(context, uri);
+                /*
                 Intent intent = new Intent(view.getContext(), WebActivity.class);
                 intent.putExtra("link", mTxtLink.getText().toString());
 
@@ -51,6 +59,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHo
                 } catch (PendingIntent.CanceledException e) {
                     System.out.println("err");
                 }
+                 */
             });
         }
     }
@@ -67,7 +76,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHo
 
         View view = inflater.inflate(R.layout.recycler_listitem, viewGroup, false);
 
-        return new ViewHolder(view);
+        return new ViewHolder(view, context);
     }
 
     @Override
